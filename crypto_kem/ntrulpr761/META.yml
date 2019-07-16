@@ -1,12 +1,13 @@
 name: ntrulpr761
 type: kem
 claimed-nist-level: 3
+claimed-security: IND-CCA2
 length-public-key: 1039
+length-secret-key: 1294
 length-ciphertext: 1167
 length-shared-secret: 32
-testvectors-sha256: 4ce8a7f932cac8f9f0fcabca6ecd87c1f3e5d4d46acf41bdbb5f4b228cff1014
 nistkat-sha256: 212f68484864e927c674a656ea44ea0f47c048d0dd3518b102c98a9eacd16a72
-principal-submitter:
+principal-submitters:
   - Daniel J. Bernstein, University of Illinois at Chicago
   - Chitchanok Chuengsatiansup, INRIA and ENS de Lyon
   - Tanja Lange, Technische Universiteit Eindhoven
@@ -15,4 +16,3 @@ auxiliary-submitters: []
 implementations:
     - name: clean
       version: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-2/submissions/NTRU-Prime-Round2.zip reference implemntation
-      length-secret-key: 1294
