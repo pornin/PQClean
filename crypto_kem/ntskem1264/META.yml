@@ -1,0 +1,19 @@
+name: NTS-KEM(12,64)
+type: kem
+claimed-nist-level: 1
+claimed-security: IND-CCA2
+length-public-key: 319488
+length-secret-key: 9248
+length-ciphertext: 1024
+length-shared-secret: 32
+nistkat-sha256: 501e000c3eb374ffbfb81b0f16673a6282116465936608d7d164b05635e769e8
+principal-submitters:
+  - Martin Albrecht
+  - Carlos Cid
+  - Kenneth G. Paterson
+  - Cen Jung Tjhai
+  - Martin Tomlinson
+auxiliary-submitters: []
+implementations:
+    - name: clean
+      version: https://csrc.nist.gov/CSRC/media/Projects/Post-Quantum-Cryptography/documents/round-2/submissions/NTS-KEM-Round2.zip reference implemntation
