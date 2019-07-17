@@ -6,7 +6,7 @@ length-public-key: 319488
 length-secret-key: 9248
 length-ciphertext: 128
 length-shared-secret: 32
-nistkat-sha256: 501e000c3eb374ffbfb81b0f16673a6282116465936608d7d164b05635e769e8
+nistkat-sha256: a2c2e4de7e67091d12c00cbc6f09a6890fb97d8812b5ca2a600f2c352761bd96
 principal-submitters:
   - Martin Albrecht
   - Carlos Cid
