@@ -39,6 +39,6 @@
  *  @param[in,out] A    Matrix A
  *  @return The rank matrix A
  **/
-uint32_t m4r_rref(matrix_ff2* A);
+uint32_t PQCLEAN_NTSKEM1264_CLEAN_m4r_rref(matrix_ff2* A);
 
 #endif /* __M4R_H */

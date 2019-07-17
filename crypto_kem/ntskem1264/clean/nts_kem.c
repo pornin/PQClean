@@ -78,7 +78,7 @@ void fprintf_uint8_vec(FILE* fp,
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_create(NTSKEM** nts_kem)
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_create(NTSKEM** nts_kem)
 {
     int32_t status = NTS_KEM_BAD_MEMORY_ALLOCATION;
     int32_t i;
@@ -105,7 +105,7 @@ int nts_kem_create(NTSKEM** nts_kem)
     priv->m = NTS_KEM_PARAM_M;
     
     /* Initialise finite-field */
-    priv->ff2m = ff_create();
+    priv->ff2m = PQCLEAN_NTSKEM1264_CLEAN_ff_create();
     if (!priv->ff2m)
         goto nts_kem_create_fail;
     
@@ -193,15 +193,15 @@ int nts_kem_create(NTSKEM** nts_kem)
     status = NTS_KEM_SUCCESS;
 nts_kem_create_fail:
     if (Gz) {
-        zero_poly(Gz);
-        free_poly(Gz);
+        PQCLEAN_NTSKEM1264_CLEAN_zero_poly(Gz);
+        PQCLEAN_NTSKEM1264_CLEAN_free_poly(Gz);
         Gz = NULL;
     }
     
-    free_matrix_ff2(Q);
+    PQCLEAN_NTSKEM1264_CLEAN_free_matrix_ff2(Q);
     if (status != NTS_KEM_SUCCESS) {
         if (nts_kem_ptr) {
-            nts_kem_release(nts_kem_ptr);
+            PQCLEAN_NTSKEM1264_CLEAN_nts_kem_release(nts_kem_ptr);
             nts_kem_ptr = NULL;
         }
     }
@@ -218,7 +218,7 @@ nts_kem_create_fail:
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_init_from_private_key(NTSKEM** nts_kem,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_init_from_private_key(NTSKEM** nts_kem,
                                   const uint8_t *buffer,
                                   size_t buffer_size)
 {
@@ -251,7 +251,7 @@ int nts_kem_init_from_private_key(NTSKEM** nts_kem,
     priv->m = NTS_KEM_PARAM_M;
     
     /* Initialise finite-field */
-    priv->ff2m = ff_create();
+    priv->ff2m = PQCLEAN_NTSKEM1264_CLEAN_ff_create();
     if (!priv->ff2m)
         goto nts_kem_init_fail;
     
@@ -264,7 +264,7 @@ int nts_kem_init_from_private_key(NTSKEM** nts_kem,
 nts_kem_init_fail:
     if (status != NTS_KEM_SUCCESS) {
         if (nts_kem_ptr) {
-            nts_kem_release(nts_kem_ptr);
+            PQCLEAN_NTSKEM1264_CLEAN_nts_kem_release(nts_kem_ptr);
             nts_kem_ptr = NULL;
         }
     }
@@ -277,7 +277,7 @@ nts_kem_init_fail:
  *
  *  @param[in] nts_kem  A pointer to an NTS-KEM object
  **/
-void nts_kem_release(NTSKEM *nts_kem)
+void PQCLEAN_NTSKEM1264_CLEAN_nts_kem_release(NTSKEM *nts_kem)
 {
     NTSKEM_private *priv = NULL;
     
@@ -288,7 +288,7 @@ void nts_kem_release(NTSKEM *nts_kem)
             memset(priv->h, 0, sizeof(priv->h));
             memset(priv->p, 0, sizeof(priv->p));
             memset(priv->z, 0, sizeof(priv->z));
-            ff_release(priv->ff2m);
+            PQCLEAN_NTSKEM1264_CLEAN_ff_release(priv->ff2m);
             priv->ff2m = NULL;
             priv->m = 0;
             free(priv);
@@ -314,7 +314,7 @@ void nts_kem_release(NTSKEM *nts_kem)
  
  *  @return NTS-KEM key size in bytes
  **/
-int nts_kem_key_size()
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_key_size()
 {
     return kNTSKEMKeysize;
 }
@@ -325,10 +325,10 @@ int nts_kem_key_size()
  *  @param[in] nts_kem  The pointer to an NTS-KEM object
  *  @return NTS-KEM ciphertext size in bytes
  **/
-int nts_kem_ciphertext_size(const NTSKEM *nts_kem)
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_ciphertext_size(const NTSKEM *nts_kem)
 {
     (void) nts_kem; // unused parameter
-    return nts_kem_key_size() + NTS_KEM_PARAM_CEIL_R_BYTE;
+    return PQCLEAN_NTSKEM1264_CLEAN_nts_kem_key_size() + NTS_KEM_PARAM_CEIL_R_BYTE;
 }
 
 /**
@@ -341,7 +341,7 @@ int nts_kem_ciphertext_size(const NTSKEM *nts_kem)
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_encapsulate(const uint8_t *pk,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
                         size_t pk_size,
                         uint8_t *c_ast,
                         uint8_t *k_r)
@@ -517,7 +517,7 @@ int nts_kem_encapsulate(const uint8_t *pk,
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_decapsulate(const uint8_t *sk,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
                         size_t sk_size,
                         const uint8_t *c_ast,
                         uint8_t *k_r)
@@ -550,7 +550,7 @@ int nts_kem_decapsulate(const uint8_t *sk,
     /**
      * Construct an NTS object from private key
      **/
-    if (NTS_KEM_SUCCESS != nts_kem_init_from_private_key(&nts_kem, sk, sk_size))
+    if (NTS_KEM_SUCCESS != PQCLEAN_NTSKEM1264_CLEAN_nts_kem_init_from_private_key(&nts_kem, sk, sk_size))
         goto decapsulation_failure;
     
     priv = nts_kem->priv;
@@ -592,7 +592,7 @@ int nts_kem_decapsulate(const uint8_t *sk,
      * Given the syndromes computed earlier, use Berlekamp-Massey algorithm
      * to obtain the error-locator polynomial σ(x)
      **/
-    sigma_x = berlekamp_massey(priv->ff2m, syndromes, 2*NTS_KEM_PARAM_T, &extended_error);
+    sigma_x = PQCLEAN_NTSKEM1264_CLEAN_berlekamp_massey(priv->ff2m, syndromes, 2*NTS_KEM_PARAM_T, &extended_error);
     if (!sigma_x)
         goto decapsulation_failure;
 
@@ -611,7 +611,7 @@ int nts_kem_decapsulate(const uint8_t *sk,
      * the locations of the error are. They can be efficiently computed
      * using additive FFT over Finite Field
      **/
-    evals = additive_fft(priv->ff2m, sigma_x);
+    evals = PQCLEAN_NTSKEM1264_CLEAN_additive_fft(priv->ff2m, sigma_x);
     if (!evals)
         goto decapsulation_failure;
     
@@ -717,8 +717,8 @@ decapsulation_failure:
     memset(e, 0, NTS_KEM_PARAM_CEIL_N_BYTE);
     memset(e_prime, 0, NTS_KEM_PARAM_CEIL_N_BYTE);
     if (sigma_x) {
-        zero_poly(sigma_x);
-        free_poly(sigma_x);
+        PQCLEAN_NTSKEM1264_CLEAN_zero_poly(sigma_x);
+        PQCLEAN_NTSKEM1264_CLEAN_free_poly(sigma_x);
     }
     memset(syndromes, 0, sizeof(syndromes));
     if (evals) {
@@ -726,7 +726,7 @@ decapsulation_failure:
         free(evals);
     }
     if (nts_kem)
-        nts_kem_release(nts_kem);
+        PQCLEAN_NTSKEM1264_CLEAN_nts_kem_release(nts_kem);
     
     return status;
 }
@@ -759,12 +759,12 @@ static int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
 {
     int i, status = 1;
     ff_unit *W = NULL;
-    poly* Fz = init_poly((1 << ff2m->m));
-    poly* Dz = init_poly((1 << ff2m->m));
+    poly* Fz = PQCLEAN_NTSKEM1264_CLEAN_init_poly((1 << ff2m->m));
+    poly* Dz = PQCLEAN_NTSKEM1264_CLEAN_init_poly((1 << ff2m->m));
     if (!Fz || !Dz)
         return 0;
     
-    if (!(W = additive_fft(ff2m, Gz)))
+    if (!(W = PQCLEAN_NTSKEM1264_CLEAN_additive_fft(ff2m, Gz)))
         return 0;
     for (i=0; i<(1 << ff2m->m) && status; i++) {
         status = (W[i] != 0);
@@ -772,15 +772,15 @@ static int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
     if (status) {
         /* Does it have repeated roots? */
         /* F(z) = GCD(G(z), d/dz G(z))  */
-        if (formal_derivative_poly(Gz, Dz)) {
-            if (gcd_poly(ff2m, Gz, Dz, Fz)) {
+        if (PQCLEAN_NTSKEM1264_CLEAN_formal_derivative_poly(Gz, Dz)) {
+            if (PQCLEAN_NTSKEM1264_CLEAN_gcd_poly(ff2m, Gz, Dz, Fz)) {
                 status = (Fz->degree < 1);
             }
         }
     }
     
-    zero_poly(Dz); free_poly(Dz);
-    zero_poly(Fz); free_poly(Fz);
+    PQCLEAN_NTSKEM1264_CLEAN_zero_poly(Dz); PQCLEAN_NTSKEM1264_CLEAN_free_poly(Dz);
+    PQCLEAN_NTSKEM1264_CLEAN_zero_poly(Fz); PQCLEAN_NTSKEM1264_CLEAN_free_poly(Fz);
     memset(W, 0, (1 << ff2m->m)*sizeof(ff_unit));
     free(W);
     
@@ -806,7 +806,7 @@ static int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
 static poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
 {
     uint8_t buffer[NTS_KEM_PARAM_CEIL_R_BYTE];
-    poly *Gz = init_poly(1 << ff2m->m);
+    poly *Gz = PQCLEAN_NTSKEM1264_CLEAN_init_poly(1 << ff2m->m);
     if (!Gz)
         return NULL;
     
@@ -904,7 +904,7 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
      * Perform additive FFT on Gz to obtain an evaluation of G(z)
      * at points B[0], B[1], B[2], ..., B[n-1]
      **/
-    h1 = additive_fft(priv->ff2m, Gz);
+    h1 = PQCLEAN_NTSKEM1264_CLEAN_additive_fft(priv->ff2m, Gz);
     if (!h1)
         return NULL;
 
@@ -932,7 +932,7 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
      * 3(c) Transform H_m_hat to H (binary matrix) by applying
      *      operator B(.)^T on each component of H_m.
      **/
-    H = calloc_matrix_ff2(Gz->degree * priv->ff2m->m, (1 << priv->m));
+    H = PQCLEAN_NTSKEM1264_CLEAN_calloc_matrix_ff2(Gz->degree * priv->ff2m->m, (1 << priv->m));
     if (!H)
         return NULL;
     for (i=0; i<NTS_KEM_PARAM_N; i++) h1[i] = 1; /* h1 stores h*b^j for some integer j */
@@ -979,7 +979,7 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
      *
      * M4RI method is used for this transformation
      **/
-    rank = reduce_row_echelon_matrix_ff2(H);
+    rank = PQCLEAN_NTSKEM1264_CLEAN_reduce_row_echelon_matrix_ff2(H);
     if (NTS_KEM_PARAM_K != nts_kem->length - rank) {
         fprintf(stderr, "FATAL ERROR: The Goppa code is invalid, ");
         fprintf(stderr, "this indicates that there is bugs in the code\n\n");
@@ -999,7 +999,7 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
         v_ptr = (packed_t *)row_ptr_matrix_ff2(H, i);
         while (!is_bit_set(v_ptr, H->ncols-j-1)) ++j;
         
-        column_swap_matrix_ff2(H, NTS_KEM_PARAM_K + i, H->ncols-j-1);
+        PQCLEAN_NTSKEM1264_CLEAN_column_swap_matrix_ff2(H, NTS_KEM_PARAM_K + i, H->ncols-j-1);
 #if INTERMEDIATE_VALUES > 1
         if (NTS_KEM_PARAM_K + i != H->ncols-j-1) {
             fprintf(stdout, "# Permutation ρ : swapping columns %d with %d\n",
@@ -1043,7 +1043,7 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
      * 3(e) Construct the generator matrix G = [I_k | Q] from
      *      the parity-check matrix H = [Q^T | I_{n-k}].
      **/
-    if (!(Q = calloc_matrix_ff2(NTS_KEM_PARAM_K, NTS_KEM_PARAM_C)))
+    if (!(Q = PQCLEAN_NTSKEM1264_CLEAN_calloc_matrix_ff2(NTS_KEM_PARAM_K, NTS_KEM_PARAM_C)))
         return NULL;
     for (i=0; i<NTS_KEM_PARAM_C; i++) {
         v_ptr = (packed_t *)row_ptr_matrix_ff2(H, i);
@@ -1068,8 +1068,8 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
     
     memset(h1, 0, NTS_KEM_PARAM_N*sizeof(ff_unit));
     free(h1);
-    zero_matrix_ff2(H);
-    free_matrix_ff2(H);
+    PQCLEAN_NTSKEM1264_CLEAN_zero_matrix_ff2(H);
+    PQCLEAN_NTSKEM1264_CLEAN_free_matrix_ff2(H);
     
     return Q;
 }
@@ -1223,7 +1223,7 @@ static void fisher_yates_shuffle(ff_unit *buffer)
     ff_unit index, swap;
     int i = NTS_KEM_PARAM_N - 1;
     while (i > 0) {
-        index = random_uint16_bounded(i+1);
+        index = PQCLEAN_NTSKEM1264_CLEAN_random_uint16_bounded(i+1);
         swap = buffer[index];
         buffer[index] = buffer[i];
         buffer[i] = swap;
@@ -1373,7 +1373,7 @@ static void random_vector(uint32_t tau, uint32_t n, uint8_t *e)
      **/
     i = NTS_KEM_PARAM_N-1;
     while (i >= NTS_KEM_PARAM_N-NTS_KEM_PARAM_T) {
-        index = random_uint16_bounded(i+1);
+        index = PQCLEAN_NTSKEM1264_CLEAN_random_uint16_bounded(i+1);
         a = (e[index >> 3] & (1 << (index & 7))) >> (index & 7);
         b = (e[i >> 3] & (1 << (i & 7))) >> (i & 7);
         e[index >> 3] &= ~(1 << (index & 7));

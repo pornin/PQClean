@@ -25,14 +25,14 @@ typedef struct stack {
     size_t size;
 } stack;
 
-stack* stack_create(void);
+stack* PQCLEAN_NTSKEM1264_CLEAN_stack_create(void);
 
-void stack_free(stack *stack);
+void PQCLEAN_NTSKEM1264_CLEAN_stack_free(stack *stack);
 
-int stack_push(stack *stack, void *ptr);
+int PQCLEAN_NTSKEM1264_CLEAN_stack_push(stack *stack, void *ptr);
 
-void* stack_pop(stack *stack);
+void* PQCLEAN_NTSKEM1264_CLEAN_stack_pop(stack *stack);
 
-size_t stack_size(const stack *stack);
+size_t PQCLEAN_NTSKEM1264_CLEAN_stack_size(const stack *stack);
 
 #endif /* __NTSKEM_STACK_H */

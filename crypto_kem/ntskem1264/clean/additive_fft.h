@@ -29,6 +29,6 @@
  *  @return the FFT of f, or the multipoint evaluation of f
  *          on all elements of ff2m on success, NULL otherwise.
  **/
-ff_unit* additive_fft(const FF2m* ff2m, const poly *f);
+ff_unit* PQCLEAN_NTSKEM1264_CLEAN_additive_fft(const FF2m* ff2m, const poly *f);
 
 #endif /* __ADDITIVE_FFT_H */

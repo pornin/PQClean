@@ -42,7 +42,7 @@ static uint8_t randombit()
     return b;
 }
 
-uint16_t random_uint16_bounded(uint16_t bound)
+uint16_t PQCLEAN_NTSKEM1264_CLEAN_random_uint16_bounded(uint16_t bound)
 {
     uint16_t d, u, x;
     

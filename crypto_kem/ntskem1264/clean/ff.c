@@ -100,7 +100,7 @@ static ff_unit ff_inv_12(const FF2m* ff2m, ff_unit a)
     return ff_sqr_12(ff2m, b);      /* a^4094 */
 }
 
-FF2m* ff_create()
+FF2m* PQCLEAN_NTSKEM1264_CLEAN_ff_create()
 {
     int i;
 #if defined(INTERMEDIATE_VALUES)
@@ -152,7 +152,7 @@ FF2m* ff_create()
     return ff2m;
 }
 
-void ff_release(FF2m* ff2m)
+void PQCLEAN_NTSKEM1264_CLEAN_ff_release(FF2m* ff2m)
 {
     if (ff2m) {
 #if defined(INTERMEDIATE_VALUES)

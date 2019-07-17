@@ -248,13 +248,13 @@ static uint32_t _m4ri_gauss_submatrix(matrix_ff2* A,
     return (uint32_t)(c-j-1);
 }
 
-uint32_t m4r_rref(matrix_ff2* A)
+uint32_t PQCLEAN_NTSKEM1264_CLEAN_m4r_rref(matrix_ff2* A)
 {
     int32_t r = 0, c = 0, rank = 0;
     int32_t k = STRIPE_SIZE, rk;
     matrix_ff2 *T = NULL;
     
-    if (!(T = alloc_matrix_ff2(sizeof(_gray_codes_lut8), A->ncols)))
+    if (!(T = PQCLEAN_NTSKEM1264_CLEAN_alloc_matrix_ff2(sizeof(_gray_codes_lut8), A->ncols)))
         return 0;
     
     r = A->nrows;
@@ -276,7 +276,7 @@ uint32_t m4r_rref(matrix_ff2* A)
             --c;
     }
     
-    free_matrix_ff2(T);
+    PQCLEAN_NTSKEM1264_CLEAN_free_matrix_ff2(T);
     
     return (uint32_t)rank;
 

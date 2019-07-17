@@ -32,7 +32,7 @@
  *  @return A polynomial e(x) whose reciprocal roots indicate the
  *          location of errors.
  **/
-poly *berlekamp_massey(const FF2m *ff2m,
+poly *PQCLEAN_NTSKEM1264_CLEAN_berlekamp_massey(const FF2m *ff2m,
                        const ff_unit *S,
                        int s_len,
                        int *extended_error);

@@ -38,7 +38,7 @@ typedef struct {
  *  @param[in] ncols    Number of columns
  *  @return Pointer to matrix object
  **/
-matrix_ff2* alloc_matrix_ff2(int nrows, int ncols);
+matrix_ff2* PQCLEAN_NTSKEM1264_CLEAN_alloc_matrix_ff2(int nrows, int ncols);
 
 /**
  *  Allocate and zero an (nrows x ncols) matrix F_2
@@ -47,21 +47,21 @@ matrix_ff2* alloc_matrix_ff2(int nrows, int ncols);
  *  @param[in] ncols    Number of columns
  *  @return Pointer to matrix object
  **/
-matrix_ff2* calloc_matrix_ff2(int nrows, int ncols);
+matrix_ff2* PQCLEAN_NTSKEM1264_CLEAN_calloc_matrix_ff2(int nrows, int ncols);
 
 /**
  *  Deallocate an F_2 matrix
  *
  *  @param[in] M    Pointer to matrix object
  **/
-void free_matrix_ff2(matrix_ff2* M);
+void PQCLEAN_NTSKEM1264_CLEAN_free_matrix_ff2(matrix_ff2* M);
 
 /**
  *  Zero an F_2 matrix
  *
  *  @param[in] M    Pointer to matrix object
  **/
-void zero_matrix_ff2(matrix_ff2* M);
+void PQCLEAN_NTSKEM1264_CLEAN_zero_matrix_ff2(matrix_ff2* M);
 
 /**
  *  Pointer to the r-th row of a matrix
@@ -82,7 +82,7 @@ static inline uint8_t* row_ptr_matrix_ff2(const matrix_ff2* M, uint32_t r)
  *  @param[in]     a    Column a
  *  @param[in]     b    Column b
  **/
-void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b);
+void PQCLEAN_NTSKEM1264_CLEAN_column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b);
 
 /**
  *  Transform a matrix M into reduced row echelon form M = [A | I]
@@ -94,6 +94,6 @@ void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b);
  *  @param[in,out] M    Pointer to a matrix
  *  @return The rank of matrix M
  **/
-uint32_t reduce_row_echelon_matrix_ff2(matrix_ff2 *M);
+uint32_t PQCLEAN_NTSKEM1264_CLEAN_reduce_row_echelon_matrix_ff2(matrix_ff2 *M);
 
 #endif /* _MATRIX_GF2_H */

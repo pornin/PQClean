@@ -21,6 +21,6 @@
  *  @param[in]  bound  The limit of the number to be generated
  *  @return a 16-bit random number
  **/
-uint16_t random_uint16_bounded(uint16_t bound);
+uint16_t PQCLEAN_NTSKEM1264_CLEAN_random_uint16_bounded(uint16_t bound);
 
 #endif /* __NTSKEM_RANDOM_H */

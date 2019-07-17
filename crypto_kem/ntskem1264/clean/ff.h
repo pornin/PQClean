@@ -95,13 +95,13 @@ typedef struct FF2m {
  *  
  *  @return FF2m instance on success, otherwise NULL
  **/
-FF2m* ff_create(void);
+FF2m* PQCLEAN_NTSKEM1264_CLEAN_ff_create(void);
 
 /**
  *  Release an FF2m instance created by {@see ff_create}.
  *
  *  @param[in] ff2m  Instance to an FF2m object
  **/
-void ff_release(FF2m* ff2m);
+void PQCLEAN_NTSKEM1264_CLEAN_ff_release(FF2m* ff2m);
 
 #endif /* ff_h */

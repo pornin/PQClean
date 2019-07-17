@@ -27,21 +27,21 @@ typedef struct {
  *  @param[in] size     The length of the polynomial
  *  @return The pointer to the polynomial object
  **/
-poly* init_poly(int size);
+poly* PQCLEAN_NTSKEM1264_CLEAN_init_poly(int size);
 
 /**
  *  Release a polynomial object
  *
  *  @param[in] px   The pointer to a polynomial object
  **/
-void free_poly(poly* px);
+void PQCLEAN_NTSKEM1264_CLEAN_free_poly(poly* px);
 
 /**
  *  Zero a polynomial
  *
  *  @param[in] px   The pointer to a polynomial object
  **/
-void zero_poly(poly* px);
+void PQCLEAN_NTSKEM1264_CLEAN_zero_poly(poly* px);
 
 /**
  *  Clone a polynomial
@@ -49,14 +49,14 @@ void zero_poly(poly* px);
  *  @param[in] px   The pointer to a polynomial object
  *  @return The pointer to the cloned polynomial object
  **/
-poly* clone_poly(const poly *px);
+poly* PQCLEAN_NTSKEM1264_CLEAN_clone_poly(const poly *px);
 
 /**
  *  Compute the degree of a polynomial
  *
  *  @param[in] px   The pointer to a polynomial object
  **/
-void update_poly_degree(poly *px);
+void PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree(poly *px);
 
 /**
  *  Compute the formal derivative of a polynomial
@@ -65,7 +65,7 @@ void update_poly_degree(poly *px);
  *  @param[out] dx  The derivative of f(x)
  *  @return 1 on success, 0 otherwise
  **/
-int formal_derivative_poly(const poly* fx, poly *dx);
+int PQCLEAN_NTSKEM1264_CLEAN_formal_derivative_poly(const poly* fx, poly *dx);
 
 /**
  *  Obtain the GCD of two finite-field polynomials
@@ -79,7 +79,7 @@ int formal_derivative_poly(const poly* fx, poly *dx);
  *  @param gx   The output polynomial
  *  @return 1 on successful operation, 0 otherwise
  **/
-int gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx);
+int PQCLEAN_NTSKEM1264_CLEAN_gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx);
 
 #if defined(INTERMEDIATE_VALUES)
 /**

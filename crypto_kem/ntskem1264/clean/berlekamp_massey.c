@@ -29,7 +29,7 @@
  *           if deg(a(x)) < t-(R/2), then there is
  *           an error at the extended coordinate.
  */
-poly *berlekamp_massey(const FF2m *ff2m,
+poly *PQCLEAN_NTSKEM1264_CLEAN_berlekamp_massey(const FF2m *ff2m,
                        const ff_unit *S,
                        int slen,
                        int *extended_error)
@@ -106,7 +106,7 @@ poly *berlekamp_massey(const FF2m *ff2m,
         memcpy(sigma, varphi, (t+1)*sizeof(ff_unit));
     }
     
-    ex = init_poly(t+1);
+    ex = PQCLEAN_NTSKEM1264_CLEAN_init_poly(t+1);
     if (!ex) {
         goto BMA_fail;
     }

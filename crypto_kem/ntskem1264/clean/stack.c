@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "stack.h"
 
-stack* stack_create()
+stack* PQCLEAN_NTSKEM1264_CLEAN_stack_create()
 {
     stack *s = (stack *)calloc(1, sizeof(stack));
     if (s == NULL)
@@ -24,18 +24,18 @@ stack* stack_create()
     return s;
 }
 
-void stack_free(stack *stack)
+void PQCLEAN_NTSKEM1264_CLEAN_stack_free(stack *stack)
 {
     if (stack) {
         while (stack->size > 0) {
-            stack_pop(stack);
+            PQCLEAN_NTSKEM1264_CLEAN_stack_pop(stack);
         }
         free(stack);
         stack = NULL;
     }
 }
 
-int stack_push(stack *stack, void *ptr)
+int PQCLEAN_NTSKEM1264_CLEAN_stack_push(stack *stack, void *ptr)
 {
     node *n = (node *)calloc(1, sizeof(node));
     if (!n)
@@ -49,7 +49,7 @@ int stack_push(stack *stack, void *ptr)
     return 1;
 }
 
-void* stack_pop(stack *stack)
+void* PQCLEAN_NTSKEM1264_CLEAN_stack_pop(stack *stack)
 {
     void *ptr = NULL;
     node *n = stack->top;
@@ -65,7 +65,7 @@ void* stack_pop(stack *stack)
     return ptr;
 }
 
-size_t stack_size(const stack *stack)
+size_t PQCLEAN_NTSKEM1264_CLEAN_stack_size(const stack *stack)
 {
     return stack->size;
 }

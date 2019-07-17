@@ -35,7 +35,7 @@ typedef struct {
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code 
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_create(NTSKEM** nts_kem);
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_create(NTSKEM** nts_kem);
 
 /**
  *  Initialise an NTS-KEM object from a buffer containing the private key
@@ -46,7 +46,7 @@ int nts_kem_create(NTSKEM** nts_kem);
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_init_from_private_key(NTSKEM** nts_kem,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_init_from_private_key(NTSKEM** nts_kem,
                                   const uint8_t *buffer,
                                   size_t buffer_size);
 
@@ -55,14 +55,14 @@ int nts_kem_init_from_private_key(NTSKEM** nts_kem,
  *
  *  @param[in] nts_kem  A pointer to an NTS-KEM object
  **/
-void nts_kem_release(NTSKEM *nts_kem);
+void PQCLEAN_NTSKEM1264_CLEAN_nts_kem_release(NTSKEM *nts_kem);
 
 /**
  *  Return the key size in bytes of NTS-KEM
  
  *  @return NTS-KEM key size in bytes
  **/
-int nts_kem_key_size(void);
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_key_size(void);
 
 /**
  *  Return the ciphertext size in bytes of NTS-KEM
@@ -70,7 +70,7 @@ int nts_kem_key_size(void);
  *  @param[in] nts_kem  The pointer to an NTS-KEM object
  *  @return NTS-KEM ciphertext size in bytes
  **/
-int nts_kem_ciphertext_size(const NTSKEM *nts_kem);
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_ciphertext_size(const NTSKEM *nts_kem);
 
 /**
  *  NTS-KEM encapsulation
@@ -82,7 +82,7 @@ int nts_kem_ciphertext_size(const NTSKEM *nts_kem);
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_encapsulate(const uint8_t *pk,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
                         size_t pk_size,
                         uint8_t *c_ast,
                         uint8_t *k_r);
@@ -97,7 +97,7 @@ int nts_kem_encapsulate(const uint8_t *pk,
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative error code
  *          {@see nts_kem_errors.h}
  **/
-int nts_kem_decapsulate(const uint8_t *sk,
+int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
                         size_t sk_size,
                         const uint8_t *c_ast,
                         uint8_t *k_r);

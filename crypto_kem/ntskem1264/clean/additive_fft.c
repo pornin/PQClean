@@ -36,11 +36,11 @@ static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, i
         goto taylor_fail;
 
     /* Prepare our stack */
-    if (!(S = stack_create()) || !(obj = (item *)malloc(sizeof(item))))
+    if (!(S = PQCLEAN_NTSKEM1264_CLEAN_stack_create()) || !(obj = (item *)malloc(sizeof(item))))
         goto taylor_fail;
-    obj->fx = clone_poly(f);
+    obj->fx = PQCLEAN_NTSKEM1264_CLEAN_clone_poly(f);
     obj->n = f->degree + t;
-    stack_push(S, obj);
+    PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
     
     /* Allocate memory for L0, L1, L2 and h */
     if (!(L0 = (ff_unit *)calloc(obj->n, sizeof(ff_unit))) ||
@@ -50,9 +50,9 @@ static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, i
         goto taylor_fail;
     
     /* Process the contents of our stack */
-    while (stack_size(S) > 0) {
+    while (PQCLEAN_NTSKEM1264_CLEAN_stack_size(S) > 0) {
         /* Pop the content of our stack */
-        ptr = stack_pop(S);
+        ptr = PQCLEAN_NTSKEM1264_CLEAN_stack_pop(S);
         
         /**
          * If the content of our stack is a polynomial of degree < t,
@@ -116,13 +116,13 @@ static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, i
          * will always be zero, even if the polynomial degree is
          * less than t.
          **/
-        g0 = init_poly(t*(1 << k) + t);
+        g0 = PQCLEAN_NTSKEM1264_CLEAN_init_poly(t*(1 << k) + t);
         memcpy(g0->coeff, L0, bound_f0*sizeof(ff_unit));
         
         for (i=0; i<h_size; i++) {
             g0->coeff[(1 << k) + i] = ff2m->ff_add(ff2m, g0->coeff[(1 << k) + i], h[i]);
         }
-        update_poly_degree(g0); /* Update degree(g_0(x)) */
+        PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree(g0); /* Update degree(g_0(x)) */
         
         /**
          * Construct polynomial g_1(x) = h(x) + x^((t-1)*2^k)*f_2(x)
@@ -133,12 +133,12 @@ static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, i
          * will always be zero, even if the polynomial degree is
          * less than t.
          **/
-        g1 = init_poly(ptr->n - (t*(1 << k)) + t);
+        g1 = PQCLEAN_NTSKEM1264_CLEAN_init_poly(ptr->n - (t*(1 << k)) + t);
         memcpy(g1->coeff, h, h_size*sizeof(ff_unit));
         for (i=0; i<bound_f2; i++) {
             g1->coeff[(t-1)*(1 << k) + i] = ff2m->ff_add(ff2m, g1->coeff[(t-1)*(1 << k) + i], L2[i]);
         }
-        update_poly_degree(g1); /* Update degree(g_1(x)) */
+        PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree(g1); /* Update degree(g_1(x)) */
         
         /**
          * Add g_1(x) and g_0(x) to our stack. Note that g_1(x) must be added first
@@ -147,18 +147,18 @@ static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, i
             goto taylor_fail;
         obj->fx = g1;
         obj->n = ptr->n - (t*(1 << k));
-        stack_push(S, obj);
+        PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
         if (!(obj = (item *)malloc(sizeof(item))))
             goto taylor_fail;
         obj->fx = g0;
         obj->n = t*(1 << k);
-        stack_push(S, obj);
+        PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
         
         /**
          * Release memory of the item that we popped from stack earlier
          **/
-        zero_poly(ptr->fx);
-        free_poly(ptr->fx);
+        PQCLEAN_NTSKEM1264_CLEAN_zero_poly(ptr->fx);
+        PQCLEAN_NTSKEM1264_CLEAN_free_poly(ptr->fx);
         free(ptr);
     }
     
@@ -168,7 +168,7 @@ taylor_fail:
     if (!status) {
         if (t_list) {
             for (h_idx=0; h_idx<*size; h_idx++) {
-                free_poly(t_list[h_idx]); t_list[h_idx] = NULL;
+                PQCLEAN_NTSKEM1264_CLEAN_free_poly(t_list[h_idx]); t_list[h_idx] = NULL;
             }
             free(t_list); t_list = NULL;
         }
@@ -190,15 +190,15 @@ taylor_fail:
         memset(h,  0, (f->degree + t)*sizeof(ff_unit));
         free(h);  h  = NULL;
     }
-    while (stack_size(S) > 0) {
-        obj = stack_pop(S);
+    while (PQCLEAN_NTSKEM1264_CLEAN_stack_size(S) > 0) {
+        obj = PQCLEAN_NTSKEM1264_CLEAN_stack_pop(S);
         if (obj) {
-            zero_poly(obj->fx);
-            free_poly(obj->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_zero_poly(obj->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_free_poly(obj->fx);
             free(obj);
         }
     }
-    stack_free(S); S = NULL;
+    PQCLEAN_NTSKEM1264_CLEAN_stack_free(S); S = NULL;
     
     return t_list;
 }
@@ -219,7 +219,7 @@ static int _additive_fft_core(const FF2m* ff2m,
      * each coefficient of g(x) is that of f(x)
      * multiplied by B[m-1].
      **/
-    if (!(g = clone_poly(f)))
+    if (!(g = PQCLEAN_NTSKEM1264_CLEAN_clone_poly(f)))
         return 0;    
     for (i=1; i<=g->degree; i++) {
         b = ff2m->ff_mul(ff2m, b, B[m-1]);
@@ -235,20 +235,20 @@ static int _additive_fft_core(const FF2m* ff2m,
     /**
      * Construct polynomial g_0 and g_1
      **/
-    if (!(*g0 = init_poly((1 << (m-1)) + 2)) ||
-        !(*g1 = init_poly((1 << (m-1)) + 2)))
+    if (!(*g0 = PQCLEAN_NTSKEM1264_CLEAN_init_poly((1 << (m-1)) + 2)) ||
+        !(*g1 = PQCLEAN_NTSKEM1264_CLEAN_init_poly((1 << (m-1)) + 2)))
         return 0;
     
     for (i=0; i<h_size; i++) {
         (*g0)->coeff[i] = h[i]->coeff[0];
         (*g1)->coeff[i] = h[i]->coeff[1];
-        free_poly(h[i]);
+        PQCLEAN_NTSKEM1264_CLEAN_free_poly(h[i]);
     }
-    update_poly_degree((*g0));
-    update_poly_degree((*g1));
+    PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree((*g0));
+    PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree((*g1));
     
-    zero_poly(g);
-    free_poly(g);
+    PQCLEAN_NTSKEM1264_CLEAN_zero_poly(g);
+    PQCLEAN_NTSKEM1264_CLEAN_free_poly(g);
     free(h);
     
     return 1;
@@ -296,7 +296,7 @@ static ff_unit _additive_fft_ff_value(const FF2m* ff2m,
     return v;
 }
 
-ff_unit* additive_fft(const FF2m* ff2m, const poly *f)
+ff_unit* PQCLEAN_NTSKEM1264_CLEAN_additive_fft(const FF2m* ff2m, const poly *f)
 {
     typedef struct {
         poly *fx;
@@ -329,16 +329,16 @@ ff_unit* additive_fft(const FF2m* ff2m, const poly *f)
         goto fft_fail;
     
     /* Prepare our stack */
-    if (!(S = stack_create()) || !(obj = (item *)malloc(sizeof(item))))
+    if (!(S = PQCLEAN_NTSKEM1264_CLEAN_stack_create()) || !(obj = (item *)malloc(sizeof(item))))
         goto fft_fail;
-    obj->fx = clone_poly(f);
+    obj->fx = PQCLEAN_NTSKEM1264_CLEAN_clone_poly(f);
     obj->m = ff2m->m;
-    stack_push(S, obj);
+    PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
     
     /* Traverse the FFT tree in depth-first manner and accumulate values in vector v */
-    while (stack_size(S) > 0) {
+    while (PQCLEAN_NTSKEM1264_CLEAN_stack_size(S) > 0) {
         /* Pop the content of our stack */
-        ptr = stack_pop(S);
+        ptr = PQCLEAN_NTSKEM1264_CLEAN_stack_pop(S);
 
         if (ptr->m == 1 || ptr->fx->degree <= 0) {
             /**
@@ -352,8 +352,8 @@ ff_unit* additive_fft(const FF2m* ff2m, const poly *f)
             w[idx]   = ptr->fx->coeff[0];
             w[idx+1] = ptr->fx->coeff[0] + ff2m->ff_mul(ff2m, ptr->fx->coeff[1], D[0][0]);
             idx += s;
-            zero_poly(ptr->fx);
-            free_poly(ptr->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_zero_poly(ptr->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_free_poly(ptr->fx);
             free(ptr);
             continue;
         }
@@ -364,19 +364,19 @@ ff_unit* additive_fft(const FF2m* ff2m, const poly *f)
             goto fft_fail;
         obj->fx = g1;
         obj->m = ptr->m-1;
-        stack_push(S, obj);
+        PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
 
         if (!(obj = (item *)malloc(sizeof(item))))
             goto fft_fail;
         obj->fx = g0;
         obj->m = ptr->m-1;
-        stack_push(S, obj);
+        PQCLEAN_NTSKEM1264_CLEAN_stack_push(S, obj);
         
         /**
          * Release memory of the item that we popped from stack earlier
          **/
-        zero_poly(ptr->fx);
-        free_poly(ptr->fx);
+        PQCLEAN_NTSKEM1264_CLEAN_zero_poly(ptr->fx);
+        PQCLEAN_NTSKEM1264_CLEAN_free_poly(ptr->fx);
         free(ptr);
     }
 
@@ -415,15 +415,15 @@ fft_fail:
         free(G);
         free(D);
     }
-    while (stack_size(S) > 0) {
-        obj = stack_pop(S);
+    while (PQCLEAN_NTSKEM1264_CLEAN_stack_size(S) > 0) {
+        obj = PQCLEAN_NTSKEM1264_CLEAN_stack_pop(S);
         if (obj) {
-            zero_poly(obj->fx);
-            free_poly(obj->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_zero_poly(obj->fx);
+            PQCLEAN_NTSKEM1264_CLEAN_free_poly(obj->fx);
             free(obj);
         }
     }
-    stack_free(S); S = NULL;
+    PQCLEAN_NTSKEM1264_CLEAN_stack_free(S); S = NULL;
     
     return w;
 }

@@ -20,7 +20,7 @@
 #define COPY_POLY(a, b)  (b)->degree = (a)->degree;\
                          memcpy((b)->coeff, (a)->coeff, (a)->size*sizeof(ff_unit))
 
-poly* init_poly(int size)
+poly* PQCLEAN_NTSKEM1264_CLEAN_init_poly(int size)
 {
     poly* px = (poly *)malloc(sizeof(poly));
     if (!px)
@@ -35,7 +35,7 @@ poly* init_poly(int size)
     return px;
 }
 
-void free_poly(poly* px)
+void PQCLEAN_NTSKEM1264_CLEAN_free_poly(poly* px)
 {
     if (px) {
         if (px->coeff)
@@ -47,14 +47,14 @@ void free_poly(poly* px)
     }
 }
 
-void zero_poly(poly* px)
+void PQCLEAN_NTSKEM1264_CLEAN_zero_poly(poly* px)
 {
     memset(px->coeff, 0, px->size*sizeof(ff_unit));
 }
 
-poly* clone_poly(const poly *px)
+poly* PQCLEAN_NTSKEM1264_CLEAN_clone_poly(const poly *px)
 {
-    poly *qx = init_poly(px->size);
+    poly *qx = PQCLEAN_NTSKEM1264_CLEAN_init_poly(px->size);
     if (!qx)
         return NULL;
     
@@ -64,13 +64,13 @@ poly* clone_poly(const poly *px)
     return qx;
 }
 
-void update_poly_degree(poly *px)
+void PQCLEAN_NTSKEM1264_CLEAN_update_poly_degree(poly *px)
 {
     px->degree = px->size-1;
     while (px->degree > 0 && !px->coeff[px->degree]) --px->degree;
 }
 
-int formal_derivative_poly(const poly* fx, poly *dx)
+int PQCLEAN_NTSKEM1264_CLEAN_formal_derivative_poly(const poly* fx, poly *dx)
 {
     int i;
     
@@ -116,12 +116,12 @@ static void modulo_reduce_poly(const FF2m* ff2m, const poly *mx, poly *ax)
     }
 }
 
-int gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx)
+int PQCLEAN_NTSKEM1264_CLEAN_gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx)
 {
     poly *sx, *tx;
     
-    sx = clone_poly(ax);
-    tx = clone_poly(bx);
+    sx = PQCLEAN_NTSKEM1264_CLEAN_clone_poly(ax);
+    tx = PQCLEAN_NTSKEM1264_CLEAN_clone_poly(bx);
     if (!sx || !tx)
         return 0;
     
@@ -140,8 +140,8 @@ int gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx)
     }
     COPY_POLY(sx, gx);
     
-    free_poly(sx);
-    free_poly(tx);
+    PQCLEAN_NTSKEM1264_CLEAN_free_poly(sx);
+    PQCLEAN_NTSKEM1264_CLEAN_free_poly(tx);
     
     return 1;
 }

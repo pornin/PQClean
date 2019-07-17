@@ -22,7 +22,7 @@
 #define PQ_EXTRA_ROWS_FOR_FULL_RANK     20
 #define RANDOM_MATRIX_SEED_SIZE         512
 
-matrix_ff2* alloc_matrix_ff2(int nrows, int ncols)
+matrix_ff2* PQCLEAN_NTSKEM1264_CLEAN_alloc_matrix_ff2(int nrows, int ncols)
 {
     matrix_ff2 *M = NULL;
     
@@ -48,17 +48,17 @@ matrix_ff2* alloc_matrix_ff2(int nrows, int ncols)
     return M;
 }
 
-matrix_ff2* calloc_matrix_ff2(int nrows, int ncols)
+matrix_ff2* PQCLEAN_NTSKEM1264_CLEAN_calloc_matrix_ff2(int nrows, int ncols)
 {
-    matrix_ff2 *M = alloc_matrix_ff2(nrows, ncols);
+    matrix_ff2 *M = PQCLEAN_NTSKEM1264_CLEAN_alloc_matrix_ff2(nrows, ncols);
     if (!M)
         return NULL;
-    zero_matrix_ff2(M);
+    PQCLEAN_NTSKEM1264_CLEAN_zero_matrix_ff2(M);
     
     return M;
 }
 
-void free_matrix_ff2(matrix_ff2 *M)
+void PQCLEAN_NTSKEM1264_CLEAN_free_matrix_ff2(matrix_ff2 *M)
 {
     if (M) {
         if (M->v) {
@@ -74,12 +74,12 @@ void free_matrix_ff2(matrix_ff2 *M)
     }
 }
 
-void zero_matrix_ff2(matrix_ff2* M)
+void PQCLEAN_NTSKEM1264_CLEAN_zero_matrix_ff2(matrix_ff2* M)
 {
     memset(M->v, 0, M->stride * M->nrows);
 }
 
-void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b)
+void PQCLEAN_NTSKEM1264_CLEAN_column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b)
 {
     size_t r;
     packed_t va, vb;
@@ -103,7 +103,7 @@ void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b)
     }
 }
 
-uint32_t reduce_row_echelon_matrix_ff2(matrix_ff2 *M)
+uint32_t PQCLEAN_NTSKEM1264_CLEAN_reduce_row_echelon_matrix_ff2(matrix_ff2 *M)
 {
-    return m4r_rref(M);
+    return PQCLEAN_NTSKEM1264_CLEAN_m4r_rref(M);
 }
