@@ -18,25 +18,7 @@
 #define PARAM_RND_SIZE      16
 #define PARAM_RND_BIT_SIZE  128
 
-uint16_t random_uint16_bounded(uint16_t bound)
-{
-    uint16_t d, u, x;
-    
-    /* Knuth-Yao DDG */
-    d = 0; u = 1; x = 0;
-    do {
-        while (u < bound) {
-            u = 2*u;
-            x = 2*x + randombit();
-        }
-        d = u - bound;
-        u = d;
-    } while (x < d);
-    
-    return x - d;
-}
-    
-uint8_t randombit()
+static uint8_t randombit()
 {
     static int32_t bits_consumed = PARAM_RND_BIT_SIZE;
     static uint8_t rnd_buffer[PARAM_RND_SIZE];
@@ -58,4 +40,22 @@ uint8_t randombit()
     bits_consumed++;
     
     return b;
+}
+
+uint16_t random_uint16_bounded(uint16_t bound)
+{
+    uint16_t d, u, x;
+    
+    /* Knuth-Yao DDG */
+    d = 0; u = 1; x = 0;
+    do {
+        while (u < bound) {
+            u = 2*u;
+            x = 2*x + randombit();
+        }
+        d = u - bound;
+        u = d;
+    } while (x < d);
+    
+    return x - d;
 }

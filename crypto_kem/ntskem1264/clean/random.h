@@ -23,11 +23,4 @@
  **/
 uint16_t random_uint16_bounded(uint16_t bound);
 
-/**
- *  Return a uniform random bit
- *
- *  @return random bit 0 or 1
- **/
-uint8_t randombit(void);
-
 #endif /* __NTSKEM_RANDOM_H */

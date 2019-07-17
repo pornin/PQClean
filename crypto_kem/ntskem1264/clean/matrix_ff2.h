@@ -64,23 +64,6 @@ void free_matrix_ff2(matrix_ff2* M);
 void zero_matrix_ff2(matrix_ff2* M);
 
 /**
- *  Clone an F_2 matrix
- *
- *  @param[in] M    Pointer to matrix object
- *  @return Pointer to the cloned matrix object
- **/
-matrix_ff2* clone_matrix_ff2(const matrix_ff2* M);
-
-/**
- *  Matrix equality check
- *
- *  @param[in] A    Pointer to a matrix object
- *  @param[in] B    Pointer to another matrix object
- *  @return 1 if matrices A and B are equal, 0 otherwise
- **/
-int is_equal_matrix_ff2(const matrix_ff2* A, const matrix_ff2* B);
-
-/**
  *  Pointer to the r-th row of a matrix
  *
  *  @param[in] M    Pointer to a matrix object

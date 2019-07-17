@@ -17,9 +17,7 @@
 #include "bits.h"
 
 /* Taylor expansion of a polynomial */
-poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, int* size);
-
-poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, int* size)
+static poly** ff_poly_taylor_expansion(const FF2m* ff2m, const poly* f, int t, int* size)
 {
     typedef struct item {
         poly *fx;

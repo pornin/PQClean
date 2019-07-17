@@ -79,25 +79,6 @@ void zero_matrix_ff2(matrix_ff2* M)
     memset(M->v, 0, M->stride * M->nrows);
 }
 
-matrix_ff2* clone_matrix_ff2(const matrix_ff2* M)
-{
-    matrix_ff2* R = alloc_matrix_ff2(M->nrows, M->ncols);
-    if (!R)
-        return NULL;
-    
-    memcpy(R->v, M->v, M->stride * M->nrows);
-    
-    return R;
-}
-
-int is_equal_matrix_ff2(const matrix_ff2 *A, const matrix_ff2 *B)
-{
-    if (!A || !B || A->nrows != B->nrows || A->ncols != B->ncols)
-        return 0;
-    
-    return (0 == memcmp(A->v, B->v, A->stride * A->nrows));
-}
-
 void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b)
 {
     size_t r;

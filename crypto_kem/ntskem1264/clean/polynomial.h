@@ -52,43 +52,11 @@ void zero_poly(poly* px);
 poly* clone_poly(const poly *px);
 
 /**
- *  Polynomial equality check
- *
- *  @param[in] ax   The pointer to a polynomial object
- *  @param[in] bx   The pointer to another polynomial object
- *  @return 1 if they are equal, 0 otherwise
- **/
-int is_equal_poly(const poly* ax, const poly* bx);
-
-/**
  *  Compute the degree of a polynomial
  *
  *  @param[in] px   The pointer to a polynomial object
  **/
 void update_poly_degree(poly *px);
-
-/**
- *  Create a random polynomial of a given degree at F_2^m
- *
- *  @param[in] ff2m     The pointer to a finite-field object
- *  @param[in] degree   The degree of the polynomial to be created
- *  @return The pointer to the polynomial object created
- **/
-poly* create_random_poly(const FF2m* ff2m, int degree);
-
-/**
- *  Evaluate a polynomial at x = `a`
- *
- *  @note
- *  This method is slow. It is better to use AdditiveFFT that
- *  performs multipoint evaluation.
- *
- *  @param[in] ff2m The pointer to a finite-field object
- *  @param[in] px   The pointer to a polynomial object
- *  @param[in] a    The finite-field unit to be evaluated at
- *  @return The evaluated value
- **/
-ff_unit evaluate_poly(const FF2m* ff2m, const poly* px, ff_unit a);
 
 /**
  *  Compute the formal derivative of a polynomial
@@ -98,18 +66,6 @@ ff_unit evaluate_poly(const FF2m* ff2m, const poly* px, ff_unit a);
  *  @return 1 on success, 0 otherwise
  **/
 int formal_derivative_poly(const poly* fx, poly *dx);
-
-/**
- *  Modulo reduction of a polynomial over a finite-field
- *
- *  The method performs the following operation:
- *      a(x) = a(x) mod m(x)
- *
- *  @param ff2m The pointer to FF2m instance
- *  @param mx   The modulo polynomial
- *  @param ax   The input/output polynomial
- **/
-void modulo_reduce_poly(const FF2m* ff2m, const poly *mx, poly *ax);
 
 /**
  *  Obtain the GCD of two finite-field polynomials
@@ -124,16 +80,6 @@ void modulo_reduce_poly(const FF2m* ff2m, const poly *mx, poly *ax);
  *  @return 1 on successful operation, 0 otherwise
  **/
 int gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx);
-
-/**
- *  Returns a polynomial whose roots are specified by `roots`.
- *
- *  @param[in]  ff2m       The pointer to FF2m instance
- *  @param[in]  roots      The array of roots which must be unique
- *  @param[in]  root_size  The number of roots
- *  @return A polynomial with the specified roots
- **/
-poly* poly_from_roots(const FF2m* ff2m, const ff_unit* roots, size_t root_size);
 
 #if defined(INTERMEDIATE_VALUES)
 /**

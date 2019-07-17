@@ -39,25 +39,25 @@ static const int kNTSKEMKeysize = NTS_KEM_KEY_SIZE;
 #define NTS_KEM_PARAM_A_REM		(((NTS_KEM_PARAM_A - (kNTSKEMKeysize << 3)) & MOD) >> 3)
 
 /* Function definitions */
-poly* create_random_goppa_polynomial(const FF2m* ff2m, int degree);
-matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
+static poly* create_random_goppa_polynomial(const FF2m* ff2m, int degree);
+static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
                             const poly* Gz,
                             ff_unit *a,
                             ff_unit *h);
-void fisher_yates_shuffle(ff_unit *buffer);
-void random_vector(uint32_t tau, uint32_t n, uint8_t *e);
-int compute_syndrome(const NTSKEM* nts_kem,
+static void fisher_yates_shuffle(ff_unit *buffer);
+static void random_vector(uint32_t tau, uint32_t n, uint8_t *e);
+static int compute_syndrome(const NTSKEM* nts_kem,
                      const uint8_t *c_ast,
                      ff_unit* s);
-void correct_error_and_recover_ke(const uint8_t* e_prime,
+static void correct_error_and_recover_ke(const uint8_t* e_prime,
                                   const ff_unit* p,
                                   uint8_t *e,
                                   uint8_t *k_e);
-void pack_buffer(const uint8_t *src, int src_len, uint8_t *dst);
-void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len);
-int serialise_public_key(NTSKEM* nts_kem, const matrix_ff2* SGP);
-int serialise_private_key(NTSKEM *nts_kem);
-int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf);
+static void pack_buffer(const uint8_t *src, int src_len, uint8_t *dst);
+static void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len);
+static int serialise_public_key(NTSKEM* nts_kem, const matrix_ff2* SGP);
+static int serialise_private_key(NTSKEM *nts_kem);
+static int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf);
 #if defined(INTERMEDIATE_VALUES)
 void fprintf_ffunit_vec(FILE* fp,
                         const char *prefix,
@@ -803,7 +803,7 @@ static int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
  *  @param[in] degree The degree of the Goppa polynomial
  *  @return a valid Goppa polynomial on success, NULL otherwise
  **/
-poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
+static poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
 {
     uint8_t buffer[NTS_KEM_PARAM_CEIL_R_BYTE];
     poly *Gz = init_poly(1 << ff2m->m);
@@ -860,7 +860,7 @@ poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
  *                       elements in vector a
  *  @return A pointer to matrix Q over F_2
  **/
-matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
+static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
                             const poly* Gz,
                             ff_unit *a,
                             ff_unit *h)
@@ -1082,7 +1082,7 @@ matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
  *  @param[in]  src_len Length of src in 2-byte (word) unit
  *  @param[out] dst     Pointer to the output buffer
  **/
-void pack_buffer(const uint8_t *src, int src_len, uint8_t *dst)
+static void pack_buffer(const uint8_t *src, int src_len, uint8_t *dst)
 {
     int32_t i;
     const uint8_t* src_ptr = src;
@@ -1104,7 +1104,7 @@ void pack_buffer(const uint8_t *src, int src_len, uint8_t *dst)
  *  @param[out] dst     Pointer to the output buffer (in words)
  *  @param[in]  dst_len Length of dst in 2-byte (word) unit
  **/
-void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len)
+static void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len)
 {
     int32_t i, value;
     const uint8_t *src_ptr = src;
@@ -1123,7 +1123,7 @@ void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len)
  *  @param[in] Q          The pointer to matrix Q
  *  @return NTS_KEM_SUCCESS on success, a negative integer otherwise
  **/
-int serialise_public_key(NTSKEM* nts_kem,
+static int serialise_public_key(NTSKEM* nts_kem,
                          const matrix_ff2* Q)
 {
     NTSKEM_private* priv = (NTSKEM_private *)nts_kem->priv;
@@ -1156,7 +1156,7 @@ int serialise_public_key(NTSKEM* nts_kem,
  *  @param[in] nts_kem    The pointer to NTS-KEM object
  *  @return NTS_KEM_SUCCESS on success, a negative integer otherwise
  **/
-int serialise_private_key(NTSKEM *nts_kem)
+static int serialise_private_key(NTSKEM *nts_kem)
 {
     uint8_t *key_ptr = NULL;
     NTSKEM_private* priv = (NTSKEM_private *)nts_kem->priv;
@@ -1188,7 +1188,7 @@ int serialise_private_key(NTSKEM *nts_kem)
  *  @param[in]  buf        Pointer to buffer containing private key blob
  *  @return NTS_KEM_SUCCESS on success, a negative integer otherwise
  **/
-int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf)
+static int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf)
 {
     NTSKEM_private* priv = (NTSKEM_private *)nts_kem->priv;
     
@@ -1218,7 +1218,7 @@ int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf)
  *
  *  @param[in,out] buffer      The input/output sequence
  **/
-void fisher_yates_shuffle(ff_unit *buffer)
+static void fisher_yates_shuffle(ff_unit *buffer)
 {
     ff_unit index, swap;
     int i = NTS_KEM_PARAM_N - 1;
@@ -1248,7 +1248,7 @@ void fisher_yates_shuffle(ff_unit *buffer)
  *  @return NTS_KEM_SUCCESS on success, otherwise a negative status
  *  {@see nts_kem_errors.h}
  **/
-int compute_syndrome(const NTSKEM* nts_kem,
+static int compute_syndrome(const NTSKEM* nts_kem,
                      const uint8_t *c_ast,
                      ff_unit* s)
 {
@@ -1313,7 +1313,7 @@ int compute_syndrome(const NTSKEM* nts_kem,
  *  @param[out]     e       Error vector
  *  @param[in,out]  k_e     Recovered vector k_e
  **/
-void correct_error_and_recover_ke(const uint8_t* e_prime,
+static void correct_error_and_recover_ke(const uint8_t* e_prime,
                                   const ff_unit* p,
                                   uint8_t *e,
                                   uint8_t *k_e)
@@ -1351,7 +1351,7 @@ void correct_error_and_recover_ke(const uint8_t* e_prime,
  *  @param[in]  n    The length of the sequence in bits
  *  @param[out] e    The output vector
  **/
-void random_vector(uint32_t tau, uint32_t n, uint8_t *e)
+static void random_vector(uint32_t tau, uint32_t n, uint8_t *e)
 {
     int32_t i;
     uint8_t a, b;
