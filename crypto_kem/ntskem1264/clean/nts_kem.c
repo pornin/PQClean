@@ -58,18 +58,6 @@ static void unpack_buffer(const uint8_t *src, ff_unit *dst, int dst_len);
 static int serialise_public_key(NTSKEM* nts_kem, const matrix_ff2* SGP);
 static int serialise_private_key(NTSKEM *nts_kem);
 static int deserialise_private_key(NTSKEM* nts_kem, const uint8_t *buf);
-#if defined(INTERMEDIATE_VALUES)
-void fprintf_ffunit_vec(FILE* fp,
-                        const char *prefix,
-                        const ff_unit* a,
-                        size_t length,
-                        const char *suffix);
-void fprintf_uint8_vec(FILE* fp,
-                       const char *prefix,
-                       const uint8_t* a,
-                       size_t length,
-                       const char *suffix);
-#endif
 
 /**
  *  Initialise an NTS-KEM object with a given parameter
@@ -141,18 +129,10 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_create(NTSKEM** nts_kem)
     }
     fisher_yates_shuffle(priv->p);
     
-#if INTERMEDIATE_VALUES > 1
-    fprintf(stdout, "# KGen Step 2. Generate permutation vector p\n");
-    fprintf_ffunit_vec(stdout, "p = ", priv->p, NTS_KEM_PARAM_N, "\n");
-#endif
-    
     /**
      * Step 3. Construct a generator matrix in the reduced row echelon
      *         form G = [ I_k | Q ] of a permuted code
      **/
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# KGen Step 3. Construct a generator matrix G = [I_k | Q]\n");
-#endif
     Q = create_matrix_G(nts_kem_ptr, Gz, a, h);
     if (Q == NULL)
         goto nts_kem_create_fail;
@@ -162,23 +142,12 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_create(NTSKEM** nts_kem)
      **/
     randombytes(priv->z, NTS_KEM_KEY_SIZE);
 
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# KGen Step 4. Random vector z\n");
-    fprintf_uint8_vec(stdout, "z = ", priv->z, NTS_KEM_KEY_SIZE, "\n");
-#endif
-
     /**
      * Step 5. Partion vectors a = (a_a | a_b | a_c) and h = (h_a | h_b | h_c)
      *         and let a* = (a_b | a_c) and  h* = (h_b | h_c)
      **/
     memcpy(priv->a, &a[NTS_KEM_PARAM_A], NTS_KEM_PARAM_BC*sizeof(ff_unit));
     memcpy(priv->h, &h[NTS_KEM_PARAM_A], NTS_KEM_PARAM_BC*sizeof(ff_unit));
-    
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# KGen Step 5. Obtain a* = (a_b | a_c) and h* = (h_b | h_c)\n");
-    fprintf_ffunit_vec(stdout, "a_ast = ", priv->a, NTS_KEM_PARAM_BC, "\n");
-    fprintf_ffunit_vec(stdout, "h_ast = ", priv->h, NTS_KEM_PARAM_BC, "\n");
-#endif
     
     /**
      * The NTS-KEM public key is (Q, τ, l), where l = kNTSKEMKeysize
@@ -354,9 +323,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
 	uint64_t Q[NTS_KEM_PARAM_K][NTS_KEM_PARAM_R_DIV_64];
     uint8_t kr_in_buf[kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE];
     uint8_t k_e[kNTSKEMKeysize], e[NTS_KEM_PARAM_CEIL_N_BYTE];
-#if INTERMEDIATE_VALUES > 1
-    uint8_t m[NTS_KEM_PARAM_CEIL_K_BYTE] = {0};
-#endif
 
     (void) pk_size; // unused parameter
 
@@ -384,28 +350,11 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
      **/
     random_vector(NTS_KEM_PARAM_T, NTS_KEM_PARAM_N, e);
     
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Encap Step 1-2. Generate and partition a uniformly distributed random vector e\n");
-    fprintf_uint8_vec(stdout, "e = ", e, NTS_KEM_PARAM_CEIL_N_BYTE, "\n");
-#endif
-    
     /**
      * Step 3. Compute SHAKE256(e) to produce k_e
      **/
     shake256(k_e, kNTSKEMKeysize, e, NTS_KEM_PARAM_CEIL_N_BYTE);
 
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Encap Step 3. k_e = SHAKE256(e)\n");
-    fprintf_uint8_vec(stdout, "k_e = ", k_e, kNTSKEMKeysize, "\n");
-#endif
-
-#if INTERMEDIATE_VALUES > 1
-    fprintf(stdout, "# Encap Step 4. Message vector m\n");
-	memcpy(m, e, (NTS_KEM_PARAM_A >> 3));
-	memcpy(&m[NTS_KEM_PARAM_A >> 3], k_e, kNTSKEMKeysize);
-    fprintf_uint8_vec(stdout, "m = ", m, NTS_KEM_PARAM_CEIL_K_BYTE, "\n");
-#endif
-    
     /**
      * Step 4. Construct a length k message vector m = (e_a | k_e)
      * Step 5. Perform systematic encoding with matrix Q, 
@@ -480,12 +429,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
         c_ast[i] ^= e[(NTS_KEM_PARAM_A>>3) + i];    /* c_b = k_e + e_b, c_c = c_c + e_c */
     }
     
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Encap Step 5. Systematic encoding with Q\n");
-    fprintf_uint8_vec(stdout, "c_b = ", c_ast, NTS_KEM_KEY_SIZE, "\n");
-    fprintf_uint8_vec(stdout, "c_c = ", &c_ast[NTS_KEM_KEY_SIZE], NTS_KEM_PARAM_CEIL_R_BYTE, "\n");
-#endif
-    
     /**
      * Step 6. Output the pair (k_r, c_ast) where k_r = SHAKE256(k_e | e)
      *
@@ -494,11 +437,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_encapsulate(const uint8_t *pk,
     memcpy(kr_in_buf, k_e, kNTSKEMKeysize);
     memcpy(&kr_in_buf[kNTSKEMKeysize], e, NTS_KEM_PARAM_CEIL_N_BYTE);
     shake256(k_r, kNTSKEMKeysize, kr_in_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE);
-
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Encap Step 6. Output the pair (k_r, c* = (c_b | c_c))\n");
-    fprintf_uint8_vec(stdout, "k_r = ", k_r, NTS_KEM_KEY_SIZE, "\n");
-#endif
 
     status = NTS_KEM_SUCCESS;
     memset(e, 0, NTS_KEM_PARAM_CEIL_N_BYTE);
@@ -581,11 +519,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
         goto decapsulation_failure;
     status = NTS_KEM_BAD_MEMORY_ALLOCATION; /* Reset the status value */
    
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 1(a)-(c). Compute all 2τ syndromes\n");
-    fprintf_ffunit_vec(stdout, "s = ", syndromes, 2*NTS_KEM_PARAM_T, "\n");
-#endif
-    
     /**
      * 1(d). Compute the error-locator polynomial σ(x)
      *
@@ -595,13 +528,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
     sigma_x = PQCLEAN_NTSKEM1264_CLEAN_berlekamp_massey(priv->ff2m, syndromes, 2*NTS_KEM_PARAM_T, &extended_error);
     if (!sigma_x)
         goto decapsulation_failure;
-
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 1(d). Compute error locator polynomial σ(x)\n");
-    fprintf_ffunit_vec(stdout, "sigma = ", sigma_x->coeff, (size_t)sigma_x->degree+1, "\n");
-    fprintf(stdout, "# ξ (xi) is an indicator of whether or not there is an error in the first coordinate\n");
-    fprintf(stdout, "xi = %d\n", extended_error);
-#endif
 
     /**
      * 1(e). Evaluate the error-locator polynomial σ(x) on all elements of
@@ -614,15 +540,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
     evals = PQCLEAN_NTSKEM1264_CLEAN_additive_fft(priv->ff2m, sigma_x);
     if (!evals)
         goto decapsulation_failure;
-    
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 1(e). Multipoint evaluation of the error locator polynomial\n");
-    fprintf(stdout, "evaluations = ");
-    for (i=0; i<NTS_KEM_PARAM_N; i++) {
-        fprintf(stdout, "%03X ", evals[i]);
-    }
-    fprintf(stdout, "\n");
-#endif
     
     /**
      * 1(f). Given Λ, obtain the error vector e_prime
@@ -638,23 +555,11 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
     /* Correct the error in the zero-th (extended) coordinate if necessary */
     e_prime[0] |= ((uint8_t)extended_error);
 
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 1(f). Obtain vector e_prime\n");
-    fprintf_uint8_vec(stdout, "e_prime = ", e_prime, NTS_KEM_PARAM_CEIL_N_BYTE, "\n");
-#endif
-
     /**
      * Step 2. Permute e_prime with permutation p to obtain e
      * Step 3. Consider e = (e_a | e_b | e_c), recover k_e = c_b - e_b
      **/
     correct_error_and_recover_ke(e_prime, priv->p, e, (uint8_t*)c_ast);
-    
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 2. Permute vector e_prime to obtain e\n");
-    fprintf_uint8_vec(stdout, "e = ", e, NTS_KEM_PARAM_CEIL_N_BYTE, "\n");
-    fprintf(stdout, "# Decap Step 3. Recover k_e\n");
-    fprintf_uint8_vec(stdout, "k_e = ", c_ast, NTS_KEM_KEY_SIZE, "\n");
-#endif
     
     /**
      * Step 4. Return k_r whereby if k_e == SHAKE256(e) and wt(e) = τ,
@@ -664,10 +569,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
      * Obtain k_e from the error pattern, k_e = SHAKE256(e)
      **/
     shake256(kr_in_buf, kNTSKEMKeysize, (const uint8_t *)e, NTS_KEM_PARAM_CEIL_N_BYTE);
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# Decap Step 4. SHAKE256(e)\n");
-    fprintf_uint8_vec(stdout, "SHAKE256_e = ", kr_in_buf, NTS_KEM_KEY_SIZE, "\n");
-#endif
     /**
      * Construct (k_e | e)
      **/
@@ -708,10 +609,6 @@ int PQCLEAN_NTSKEM1264_CLEAN_nts_kem_decapsulate(const uint8_t *sk,
      **/
     shake256(k_r, kNTSKEMKeysize, xof_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE);
 
-#if defined(INTERMEDIATE_VALUES)
-    fprintf_uint8_vec(stdout, "k_r = ", k_r, NTS_KEM_KEY_SIZE, "\n");
-#endif
-    
 decapsulation_failure:
     memset(kr_in_buf, 0, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE);
     memset(e, 0, NTS_KEM_PARAM_CEIL_N_BYTE);
@@ -810,9 +707,6 @@ static poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
     if (!Gz)
         return NULL;
     
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# KGen Step 1. Randomly generate a monic Goppa polynomial G(z) of degree τ\n");
-#endif
     Gz->degree = degree;
     do {
         /**
@@ -827,18 +721,11 @@ static poly* create_random_goppa_polynomial(const FF2m *ff2m, int degree)
          **/
         Gz->coeff[ Gz->degree ] = 1;
         
-#if INTERMEDIATE_VALUES > 1
-        poly_fprintf(stdout, "# G(z) : ", ff2m, Gz, " -> ");
-        fprintf(stdout, "%s\n", Gz->coeff[0] && is_valid_goppa_polynomial(ff2m, Gz) ? "VALID" : "INVALID");
-#endif
         /**
          * (c) Restart to step (a) if the first coefficient is 0 or G(z) has roots 
          *     in F_{2^m} or G(z) has repeated roots in any extension field.
          **/
     } while (!Gz->coeff[0] || !is_valid_goppa_polynomial(ff2m, Gz));
-#if defined(INTERMEDIATE_VALUES)
-    fprintf_ffunit_vec(stdout, "Gz = ", Gz->coeff, Gz->degree+1, "\n");
-#endif
     memset(buffer, 0, sizeof(buffer));
     
     return Gz;
@@ -871,9 +758,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
     ff_unit a_prime[NTS_KEM_PARAM_N];
     matrix_ff2 *H = NULL, *Q = NULL;
     packed_t *v_ptr = NULL;
-#if INTERMEDIATE_VALUES > 1
-    const uint8_t* row_ptr = NULL;
-#endif
     
     /**
      * 3(a) Let a = π_p(a′) = (a_{p_0},a_{p_1},...,a_{p_{n−1}}) ∈ F^n_{2^m}
@@ -920,12 +804,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
     }
     memcpy(h1, h, NTS_KEM_PARAM_N*sizeof(ff_unit));
     
-#if defined(INTERMEDIATE_VALUES)
-    fprintf(stdout, "# KGen vectors a and h after permutation ρ\n");
-    fprintf_ffunit_vec(stdout, "a = ", a, NTS_KEM_PARAM_N, "\n");
-    fprintf_ffunit_vec(stdout, "h = ", h, NTS_KEM_PARAM_N, "\n");
-#endif
-    
     /**
      * Construct H_m with vectors a and h
      * 
@@ -954,18 +832,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
         }
     }
     
-#if INTERMEDIATE_VALUES > 1
-    fprintf(stdout, "# KGen Matrix H (not in reduced-echelon form)\n");
-    fprintf(stdout, "H = ");
-    for (i=0; i<H->nrows; i++) {
-        row_ptr = row_ptr_matrix_ff2(H, i);
-        for (j=0; j<(NTS_KEM_PARAM_N >> 3); j++) {
-            fprintf(stdout, "%02X", *row_ptr++);
-        }
-    }
-    fprintf(stdout, "\n");
-#endif
-
     /**
      * 3(d) Transform matrix H to reduced row echelon form, re-ordering the columns
      *      if necessary, such that the identity matrix I_{n-k} occupies the last
@@ -1000,12 +866,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
         while (!is_bit_set(v_ptr, H->ncols-j-1)) ++j;
         
         PQCLEAN_NTSKEM1264_CLEAN_column_swap_matrix_ff2(H, NTS_KEM_PARAM_K + i, H->ncols-j-1);
-#if INTERMEDIATE_VALUES > 1
-        if (NTS_KEM_PARAM_K + i != H->ncols-j-1) {
-            fprintf(stdout, "# Permutation ρ : swapping columns %d with %d\n",
-                    NTS_KEM_PARAM_K + i, H->ncols-j-1);
-        }
-#endif
         
         /* Update the order of permutation p */
         f = priv->p[ NTS_KEM_PARAM_K + i ];
@@ -1023,22 +883,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
         h[ H->ncols-j-1 ] = f;
     }
 
-#if INTERMEDIATE_VALUES > 1
-    fprintf(stdout, "# KGen Matrix H (in reduced-echelon form)\n");
-    fprintf(stdout, "H = ");
-    for (i=0; i<H->nrows; i++) {
-        row_ptr = row_ptr_matrix_ff2(H, i);
-        for (j=0; j<(NTS_KEM_PARAM_N >> 3); j++) {
-            fprintf(stdout, "%02X", *row_ptr++);
-        }
-    }
-    fprintf(stdout, "\n");
-    fprintf(stdout, "# Vector p, a, h (after potential swapping by permutation ρ)\n");
-    fprintf_ffunit_vec(stdout, "p = ", priv->p, NTS_KEM_PARAM_N, "\n");
-    fprintf_ffunit_vec(stdout, "a = ", a, NTS_KEM_PARAM_N, "\n");
-    fprintf_ffunit_vec(stdout, "h = ", h, NTS_KEM_PARAM_N, "\n");
-#endif
-
     /**
      * 3(e) Construct the generator matrix G = [I_k | Q] from
      *      the parity-check matrix H = [Q^T | I_{n-k}].
@@ -1053,18 +897,6 @@ static matrix_ff2* create_matrix_G(const NTSKEM* nts_kem,
                           bit_value(v_ptr, j));
         }
     }
-    
-#if INTERMEDIATE_VALUES > 1
-    fprintf(stdout, "# KGen Matrix Q\n");
-    fprintf(stdout, "Q = ");
-    for (i=0; i<Q->nrows; i++) {
-        row_ptr = row_ptr_matrix_ff2(Q, i);
-        for (j=0; j<(NTS_KEM_PARAM_C >> 3); j++) {
-            fprintf(stdout, "%02X", *row_ptr++);
-        }
-    }
-    fprintf(stdout, "\n");
-#endif
     
     memset(h1, 0, NTS_KEM_PARAM_N*sizeof(ff_unit));
     free(h1);
@@ -1383,33 +1215,3 @@ static void random_vector(uint32_t tau, uint32_t n, uint8_t *e)
         --i;
     }
 }
-
-#if defined(INTERMEDIATE_VALUES)
-void fprintf_ffunit_vec(FILE* fp,
-                        const char *prefix,
-                        const ff_unit* a,
-                        size_t length,
-                        const char *suffix)
-{
-    int32_t i;
-    if (prefix)
-        fprintf(fp, "%s", prefix);
-    for (i=0; i<length; i++) fprintf(fp, "%03X ", a[i]);
-    if (suffix)
-        fprintf(fp, "%s", suffix);
-}
-
-void fprintf_uint8_vec(FILE* fp,
-                       const char *prefix,
-                       const uint8_t* a,
-                       size_t length,
-                       const char *suffix)
-{
-    int32_t i;
-    if (prefix)
-        fprintf(fp, "%s", prefix);
-    for (i=0; i<length; i++) fprintf(fp, "%02X", a[i]);
-    if (suffix)
-        fprintf(fp, "%s", suffix);
-}
-#endif

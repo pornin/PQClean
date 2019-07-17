@@ -81,30 +81,4 @@ int PQCLEAN_NTSKEM1264_CLEAN_formal_derivative_poly(const poly* fx, poly *dx);
  **/
 int PQCLEAN_NTSKEM1264_CLEAN_gcd_poly(const FF2m* ff2m, const poly* ax, const poly *bx, poly *gx);
 
-#if defined(INTERMEDIATE_VALUES)
-/**
- *  Create a string representation of a polynomial
- *
- *  @param ff2m The pointer to FF2m instance
- *  @param ax   The input polynomial
- *  @return string representation on success, NULL otherwise
- **/
-char* string_from_poly(const FF2m *ff2m, const poly *ax);
-
-/**
- *  Print a polynomial to a file pointer
- *
- *  @param fp   The file pointer
- *  @param prefix   The prefix (if any)
- *  @param ff2m     The pointer to FF2m instance
- *  @param ax       The input polynomial
- *  @param suffix   The suffix (if any)
- **/
-void poly_fprintf(FILE* fp,
-                  const char *prefix,
-                  const FF2m* ff2m,
-                  const poly* ax,
-                  const char *suffix);
-#endif /* INTERMEDIATE_VALUES */
-
 #endif /* _POLYNOMIAL_H */

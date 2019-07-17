@@ -73,21 +73,6 @@ typedef struct FF2m {
      **/
     ff_unit* basis;
 
-#if defined(INTERMEDIATE_VALUES)
-    /**
-     *  Helper look-up table that maps logarithmic
-     *  representation to polynomial representation
-     *  of a field element
-     **/
-    ff_unit *log2poly;
-    
-    /**
-     *  Helper look-up table that maps polynomial
-     *  representation to logarithmic representation
-     *  of a field element
-     **/
-    ff_unit *poly2log;
-#endif
 } FF2m;
 
 /**
