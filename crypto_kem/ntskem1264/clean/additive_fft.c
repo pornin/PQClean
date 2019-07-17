@@ -205,7 +205,7 @@ taylor_fail:
     return t_list;
 }
 
-int _additive_fft_core(const FF2m* ff2m,
+static int _additive_fft_core(const FF2m* ff2m,
                        const poly* f,
                        const ff_unit* B,
                        int m,
@@ -256,7 +256,7 @@ int _additive_fft_core(const FF2m* ff2m,
     return 1;
 }
 
-int _additive_fft_construct_basis(const FF2m* ff2m,
+static int _additive_fft_construct_basis(const FF2m* ff2m,
                                   const ff_unit* B,
                                   int m,
                                   ff_unit** G,
@@ -283,7 +283,7 @@ int _additive_fft_construct_basis(const FF2m* ff2m,
     return 1;
 }
 
-ff_unit _additive_fft_ff_value(const FF2m* ff2m,
+static ff_unit _additive_fft_ff_value(const FF2m* ff2m,
                                int index,
                                int m,
                                ff_unit *B)

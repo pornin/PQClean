@@ -71,7 +71,7 @@ const uint8_t* _gray_codes_lut[] = {
     _gray_codes_lut7, _gray_codes_lut8
 };
 
-void _m4ri_make_table_rev(matrix_ff2* T,
+static void _m4ri_make_table_rev(matrix_ff2* T,
                           const matrix_ff2* B,
                           uint32_t r_end,
                           uint32_t c_end,
@@ -203,7 +203,7 @@ static inline void _m4ri_add_rows_rev_from_gray_table(matrix_ff2* A,
     }
 }
 
-uint32_t _m4ri_gauss_submatrix(matrix_ff2* A,
+static uint32_t _m4ri_gauss_submatrix(matrix_ff2* A,
                                uint32_t r,
                                uint32_t c,
                                uint32_t r_end,

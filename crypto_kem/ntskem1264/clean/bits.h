@@ -368,13 +368,14 @@ static inline uint32_t CT_is_power_of_2(uint32_t a)
  **/
 static inline uint32_t CT_is_vector_equal(const void* a, const void* b, size_t len)
 {
-    int32_t i, l, neq_sum = 0;
+    size_t i;
+    int32_t l, neq_sum = 0;
     uint32_t *a_ptr = (uint32_t *)a;
     uint32_t *b_ptr = (uint32_t *)b;
     uint8_t *a8_ptr = (uint8_t *)a;
     uint8_t *b8_ptr = (uint8_t *)b;
     l = (int32_t)len/sizeof(uint32_t);
-    for (i=0; i<l; i++) {
+    for (i=0; i<(size_t) l; i++) {
         neq_sum += CT_is_not_equal(*a_ptr++, *b_ptr++);
     }
     a8_ptr += (l*sizeof(uint32_t));

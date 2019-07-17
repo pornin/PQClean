@@ -13,12 +13,13 @@
 #include <string.h>
 #include "ff.h"
 
-ff_unit ff_add_m(const FF2m* ff2m, ff_unit a, ff_unit b)
+static ff_unit ff_add_m(const FF2m* ff2m, ff_unit a, ff_unit b)
 {
+    (void) ff2m; // unused parameter
     return a ^ b;
 }
 
-ff_unit ff_reduce_12(uint32_t a)
+static ff_unit ff_reduce_12(uint32_t a)
 {
     uint32_t u;
     
@@ -34,10 +35,12 @@ ff_unit ff_reduce_12(uint32_t a)
     return (ff_unit)(a & 0xFFF);
 }
 
-ff_unit ff_mul_12(const FF2m* ff2m, ff_unit a, ff_unit b)
+static ff_unit ff_mul_12(const FF2m* ff2m, ff_unit a, ff_unit b)
 {
     uint32_t t;
-    
+
+    (void) ff2m; // unused parameter
+
     /* Perform shift-and-add multiplication */
     t  = a * (b & 1);
     t ^= (a * (b & 0x0002));
@@ -56,10 +59,12 @@ ff_unit ff_mul_12(const FF2m* ff2m, ff_unit a, ff_unit b)
     return ff_reduce_12(t);
 }
 
-ff_unit ff_sqr_12(const FF2m* ff2m, ff_unit a)
+static ff_unit ff_sqr_12(const FF2m* ff2m, ff_unit a)
 {
     uint32_t b = a;
-    
+
+    (void) ff2m; // unused parameter
+
     b = (b | (b << 8)) & 0x00FF00FF;
     b = (b | (b << 4)) & 0x0F0F0F0F;
     b = (b | (b << 2)) & 0x33333333;
@@ -68,7 +73,7 @@ ff_unit ff_sqr_12(const FF2m* ff2m, ff_unit a)
     return ff_reduce_12(b);
 }
 
-ff_unit ff_inv_12(const FF2m* ff2m, ff_unit a)
+static ff_unit ff_inv_12(const FF2m* ff2m, ff_unit a)
 {
     ff_unit a3, a15, b;
     

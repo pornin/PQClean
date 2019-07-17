@@ -18,7 +18,8 @@
 #include "matrix_ff2.h"
 #include "polynomial.h"
 #include "random.h"
-#include "keccak.h"
+#include "randombytes.h"
+#include "fips202.h"
 #include "berlekamp_massey.h"
 #include "additive_fft.h"
 #include "nts_kem_params.h"
@@ -104,7 +105,7 @@ int nts_kem_create(NTSKEM** nts_kem)
     priv->m = NTS_KEM_PARAM_M;
     
     /* Initialise finite-field */
-    priv->ff2m = ff_create(priv->m);
+    priv->ff2m = ff_create();
     if (!priv->ff2m)
         goto nts_kem_create_fail;
     
@@ -250,7 +251,7 @@ int nts_kem_init_from_private_key(NTSKEM** nts_kem,
     priv->m = NTS_KEM_PARAM_M;
     
     /* Initialise finite-field */
-    priv->ff2m = ff_create(priv->m);
+    priv->ff2m = ff_create();
     if (!priv->ff2m)
         goto nts_kem_init_fail;
     
@@ -326,6 +327,7 @@ int nts_kem_key_size()
  **/
 int nts_kem_ciphertext_size(const NTSKEM *nts_kem)
 {
+    (void) nts_kem; // unused parameter
     return nts_kem_key_size() + NTS_KEM_PARAM_CEIL_R_BYTE;
 }
 
@@ -355,6 +357,8 @@ int nts_kem_encapsulate(const uint8_t *pk,
 #if INTERMEDIATE_VALUES > 1
     uint8_t m[NTS_KEM_PARAM_CEIL_K_BYTE] = {0};
 #endif
+
+    (void) pk_size; // unused parameter
 
     /* Extract information from public-key */
     
@@ -388,7 +392,7 @@ int nts_kem_encapsulate(const uint8_t *pk,
     /**
      * Step 3. Compute SHAKE256(e) to produce k_e
      **/
-    shake_256(e, NTS_KEM_PARAM_CEIL_N_BYTE, k_e, kNTSKEMKeysize);
+    shake256(k_e, kNTSKEMKeysize, e, NTS_KEM_PARAM_CEIL_N_BYTE);
 
 #if defined(INTERMEDIATE_VALUES)
     fprintf(stdout, "# Encap Step 3. k_e = SHAKE256(e)\n");
@@ -489,7 +493,7 @@ int nts_kem_encapsulate(const uint8_t *pk,
      **/
     memcpy(kr_in_buf, k_e, kNTSKEMKeysize);
     memcpy(&kr_in_buf[kNTSKEMKeysize], e, NTS_KEM_PARAM_CEIL_N_BYTE);
-    shake_256(kr_in_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE, k_r, kNTSKEMKeysize);
+    shake256(k_r, kNTSKEMKeysize, kr_in_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE);
 
 #if defined(INTERMEDIATE_VALUES)
     fprintf(stdout, "# Encap Step 6. Output the pair (k_r, c* = (c_b | c_c))\n");
@@ -518,7 +522,8 @@ int nts_kem_decapsulate(const uint8_t *sk,
                         const uint8_t *c_ast,
                         uint8_t *k_r)
 {
-    int32_t i, status = NTS_KEM_BAD_MEMORY_ALLOCATION;
+    size_t i;
+    int32_t status = NTS_KEM_BAD_MEMORY_ALLOCATION;
     int32_t extended_error = 0;
     uint32_t checksum = 0, error_weight = 0;
     NTSKEM *nts_kem = NULL;
@@ -658,7 +663,7 @@ int nts_kem_decapsulate(const uint8_t *sk,
      *
      * Obtain k_e from the error pattern, k_e = SHAKE256(e)
      **/
-    shake_256((const uint8_t *)e, NTS_KEM_PARAM_CEIL_N_BYTE, kr_in_buf, kNTSKEMKeysize);
+    shake256(kr_in_buf, kNTSKEMKeysize, (const uint8_t *)e, NTS_KEM_PARAM_CEIL_N_BYTE);
 #if defined(INTERMEDIATE_VALUES)
     fprintf(stdout, "# Decap Step 4. SHAKE256(e)\n");
     fprintf_uint8_vec(stdout, "SHAKE256_e = ", kr_in_buf, NTS_KEM_KEY_SIZE, "\n");
@@ -701,7 +706,7 @@ int nts_kem_decapsulate(const uint8_t *sk,
      * Obtain k_r, i.e. k_r = SHAKE256(k_e | e) in the case of correct decapsulation,
      * otherwise obtain k_r = SHAKE256(z | c').
      **/
-    shake_256(xof_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE, k_r, kNTSKEMKeysize);
+    shake256(k_r, kNTSKEMKeysize, xof_buf, kNTSKEMKeysize + NTS_KEM_PARAM_CEIL_N_BYTE);
 
 #if defined(INTERMEDIATE_VALUES)
     fprintf_uint8_vec(stdout, "k_r = ", k_r, NTS_KEM_KEY_SIZE, "\n");
@@ -750,7 +755,7 @@ decapsulation_failure:
  *  @param[in] Gz     The Goppa polynomial G(z)
  *  @return 1 if G(z) is a valid Goppa polynomial, 0 otherwise
  **/
-int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
+static int is_valid_goppa_polynomial(const FF2m *ff2m, const poly *Gz)
 {
     int i, status = 1;
     ff_unit *W = NULL;
@@ -1351,6 +1356,8 @@ void random_vector(uint32_t tau, uint32_t n, uint8_t *e)
     int32_t i;
     uint8_t a, b;
     ff_unit index;
+
+    (void) tau; // unused parameter
 
     /**
      * Create a vector with `tau` non-zeros in

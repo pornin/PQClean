@@ -61,7 +61,7 @@ void nts_kem_release(NTSKEM *nts_kem);
  
  *  @return NTS-KEM key size in bytes
  **/
-int nts_kem_key_size();
+int nts_kem_key_size(void);
 
 /**
  *  Return the ciphertext size in bytes of NTS-KEM

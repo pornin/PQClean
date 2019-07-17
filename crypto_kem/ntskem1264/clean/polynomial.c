@@ -14,7 +14,7 @@
 #include <string.h>
 #include "polynomial.h"
 #include "bits.h"
-#include "random.h"
+#include "randombytes.h"
 #include "additive_fft.h"
 
 #define COPY_POLY(a, b)  (b)->degree = (a)->degree;\

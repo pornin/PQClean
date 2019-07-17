@@ -24,7 +24,7 @@ typedef struct stack {
     size_t size;
 } stack;
 
-stack* stack_create();
+stack* stack_create(void);
 
 void stack_free(stack *stack);
 

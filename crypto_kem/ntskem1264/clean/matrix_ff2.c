@@ -15,7 +15,7 @@
 #include "matrix_ff2.h"
 #include "m4r.h"
 #include "random.h"
-#include "keccak.h"
+#include "fips202.h"
 #include "nts_kem_errors.h"
 
 #define M4R_ROW(M, r)                   ((uint8_t *)(M)->v + ((r) * (M)->stride))
@@ -100,7 +100,7 @@ int is_equal_matrix_ff2(const matrix_ff2 *A, const matrix_ff2 *B)
 
 void column_swap_matrix_ff2(matrix_ff2* M, int32_t a, int32_t b)
 {
-    int32_t r;
+    size_t r;
     packed_t va, vb;
     packed_t *row_ptr = (packed_t *)row_ptr_matrix_ff2(M, 0);
 
