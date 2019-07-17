@@ -12,6 +12,7 @@
 #ifndef __NTSKEM_RANDOM_H
 #define __NTSKEM_RANDOM_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 /**

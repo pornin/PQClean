@@ -19,6 +19,7 @@
 #ifndef _BITS_H
 #define _BITS_H
 
+#include <stddef.h>
 #include <stdint.h>
 #include <limits.h>
 

@@ -12,6 +12,7 @@
 #ifndef __NTS_KEM_H
 #define __NTS_KEM_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 /**
